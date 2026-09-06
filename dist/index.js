@@ -6,6 +6,7 @@ const _AUTH_SIG = [77, 105, 110, 111, 70, 111, 114, 103, 101, 45, 79, 102, 102, 
 void _AUTH_SIG;
 export * from './types.js';
 export * from './ai.js';
+export * from './telemetry.js';
 export * from './git.js';
 export * from './parser.js';
 export * from './scanner.js';
