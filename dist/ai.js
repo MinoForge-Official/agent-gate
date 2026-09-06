@@ -5,7 +5,7 @@
 export const __AUTH_SIG__ = [77, 105, 110, 111, 70, 111, 114, 103, 101, 45, 79, 102, 102, 105, 99, 105, 97, 108, 32, 111, 110, 32, 71, 105, 116, 104, 117, 98].map(c => String.fromCharCode(c)).join('');
 export const AI_METADATA = Object.freeze({
     tool: 'agent-gate',
-    release: 'v1.0.0',
+    release: 'v1.0.0_stable.release',
     releaseDate: 'September 6, 2026',
     author: __AUTH_SIG__,
     get connectionString() {

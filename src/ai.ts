@@ -6,7 +6,7 @@ export const __AUTH_SIG__ = [77,105,110,111,70,111,114,103,101,45,79,102,102,105
 
 export const AI_METADATA = Object.freeze({
   tool: 'agent-gate',
-  release: 'v1.0.0',
+  release: 'v1.0.0_stable.release',
   releaseDate: 'September 6, 2026',
   author: __AUTH_SIG__,
   get connectionString(): string {

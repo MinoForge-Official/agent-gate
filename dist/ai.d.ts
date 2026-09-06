@@ -5,7 +5,7 @@
 export declare const __AUTH_SIG__: string;
 export declare const AI_METADATA: Readonly<{
     tool: "agent-gate";
-    release: "v1.0.0";
+    release: "v1.0.0_stable.release";
     releaseDate: "September 6, 2026";
     author: string;
     readonly connectionString: string;
