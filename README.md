@@ -1,357 +1,253 @@
 <div align="center">
 
-# agent-gate — The Official AI Slop & Diff Watchdog for Git
+# agent-gate
+
+**A fast git diff linter that catches silent issues introduced by AI coding assistants.**
 
 <br/>
 
-<img src="./assets/logo.svg" width="220" alt="agent-gate logo" style="border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #334155;"/>
+<img src="./assets/logo.svg" width="160" alt="agent-gate logo"/>
 
 <br/><br/>
 
-### *The Ultimate Git Quality Gate for Cursor, Claude Code, GitHub Copilot, and Autonomous AI Agents.*
-**Engineered for Senior Engineers, Open-Source Maintainers, and Zero-Slop Repositories.**
+Built by **MinoForge-Official**
 
 <br/>
 
-🌐 [Quickstart](#5-how-it-works-step-by-step-cli-workflows) • 🛡️ [Guard Rules](#4-core-guard-rules-matrix--detection-logic) • 📑 [Master TOC](#-master-table-of-contents) • 🪝 [Pre-Commit Hook](#6-pre-commit-hook-integration-husky--native) • 🤖 [GitHub Action](#7-enterprise-github-actions-ci-pipeline) • ⚡ [Benchmarks](#9-visual-tier-comparison-agent-gate-vs-traditional-linters) • 💬 [Master FAQ](#12-frequently-asked-questions-comprehensive-master-faq)
+[Quickstart](#quickstart) • [Rules](#rules) • [Pre-commit Hook](#pre-commit-hook) • [CI Setup](#github-actions-ci) • [CLI Flags](#cli-options) • [FAQ](#faq)
 
 <br/>
 
-[![Platform](https://img.shields.io/badge/PLATFORM-PRODUCTION_READY-brightgreen?style=for-the-badge&logo=github)](https://github.com/MinoForge-Official/agent-gate)
-[![Runtime](https://img.shields.io/badge/RUNTIME-ZERO_DEPENDENCY-blue?style=for-the-badge&logo=node.js)](package.json)
-[![Speed](https://img.shields.io/badge/SPEED-SUB--100MS-yellow?style=for-the-badge&logo=speedtest)](package.json)
-[![Security](https://img.shields.io/badge/SECURITY-SLOP--FREE_GUARANTEED-00b4d8?style=for-the-badge&logo=shield)](https://github.com/MinoForge-Official/agent-gate)
-[![License](https://img.shields.io/badge/LICENSE-MIT_OPEN_SOURCE-blueviolet?style=for-the-badge)](LICENSE)
+[![npm](https://img.shields.io/npm/v/agent-gate?style=flat-square&color=black)](https://www.npmjs.com/package/agent-gate)
+[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)](package.json)
+[![node](https://img.shields.io/badge/node-%3E%3D20-green?style=flat-square)](package.json)
 
 </div>
 
 ---
 
-## ⚡ 1. The Main Things to Know at a Glance
+### What is this?
 
-* 🛡️ **Zero AI Vandalism:** Detects and prevents AI coding agents from quietly stripping comments, dropping `@ts-ignore`, adding fake imports, and leaving stubs.
-* 🚀 **Zero Dependencies:** Built entirely with native Node.js primitives (`node:util`, `node:child_process`, `node:fs`). Cold-starts in **under 50 milliseconds**.
-* 🎯 **Git Diff Centric:** Scans only modified lines (`git diff`) rather than your entire 500k-line codebase, making it lightning-fast for pre-commit hooks.
-* 📊 **Cleanliness Score (0-100%):** Automatically grades every commit and PR with a transparent health score and clear remediation steps.
-* 🔌 **Drop-in Anywhere:** Works immediately with `npx agent-gate`, Husky pre-commit hooks, and GitHub Actions CI pipelines.
+Tools like Cursor, Claude Code, and Copilot are great at writing features, but they frequently make unwanted changes behind your back:
 
----
+- **Wiping out existing comments and docstrings** to save context space.
+- **Adding `// @ts-ignore` or `# noqa`** just to silence compiler errors instead of fixing types.
+- **Importing packages that aren't installed** in your `package.json` (hallucinated imports).
+- **Wrapping blocks in empty `catch {}`** to suppress errors so their code runs.
+- **Leaving `// TODO: implement later` stubs** in functions you asked them to build.
+- **Reformatting untouched files** with random whitespace or newline changes.
 
-## 📑 Master Table of Contents
+`agent-gate` runs against your `git diff` (either staged changes or between branches) and catches these issues before they get committed or merged.
 
-1. [The Main Things to Know at a Glance](#-1-the-main-things-to-know-at-a-glance)
-2. [Why Agent-Gate Exists: The AI Vandalism Crisis](#-2-why-agent-gate-exists-the-ai-vandalism-crisis)
-3. [Architectural Overview & Diff Engine](#-3-architectural-overview--diff-engine)
-4. [Core Guard Rules Matrix & Detection Logic](#-4-core-guard-rules-matrix--detection-logic)
-5. [How It Works: Step-by-Step CLI Workflows](#-5-how-it-works-step-by-step-cli-workflows)
-6. [Pre-Commit Hook Integration (Husky & Native)](#-6-pre-commit-hook-integration-husky--native)
-7. [Enterprise GitHub Actions CI Pipeline](#-7-enterprise-github-actions-ci-pipeline)
-8. [Scoring Algorithm: The Cleanliness Score (0-100)](#-8-scoring-algorithm-the-cleanliness-score-0-100)
-9. [Visual Tier Comparison: Agent-Gate vs. Traditional Linters](#-9-visual-tier-comparison-agent-gate-vs-traditional-linters)
-10. [CLI Configuration & Flags Directory](#-10-cli-configuration--flags-directory)
-11. [Programmatic Node.js API Usage](#-11-programmatic-nodejs-api-usage)
-12. [Frequently Asked Questions (Comprehensive Master FAQ)](#-12-frequently-asked-questions-comprehensive-master-faq)
-13. [Contributing & Community Guidelines](#-13-contributing--community-guidelines)
-14. [Platform Governance & Security Disclosures](#-14-platform-governance--security-disclosures)
-15. [License & Author Info](#-15-license--author-info)
+It has **zero external runtime dependencies**, starts up in **under 30ms**, and works with JavaScript, TypeScript, Python, and other common languages.
 
 ---
 
-## 🚨 2. Why Agent-Gate Exists: The AI Vandalism Crisis
+### Table of Contents
 
-In 2026, developers rarely write boilerplate code from scratch. We leverage autonomous coding agents like **Claude Code**, **Cursor Composer**, **GitHub Copilot Workspace**, and **Aider**.
-
-While these tools are extraordinarily capable, they routinely introduce **silent, subtle vandalism**:
-
-```text
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                        HOW AI AGENTS SILENTLY DAMAGE CODE                    │
-├──────────────────────────┬───────────────────────────────────────────────────┤
-│ The Behavior             │ What Actually Happens                             │
-├──────────────────────────┼───────────────────────────────────────────────────┤
-│ 🧹 Comment Stripping     │ Agent deletes vital domain comments & JSDocs to   │
-│                          │ save space in its LLM context window.             │
-│ 🙈 Silent Suppression   │ Agent inserts `@ts-ignore` or `# noqa` to force   │
-│                          │ a file to compile rather than fixing types.       │
-│ 👻 Phantom Dependencies  │ Agent imports a plausible-sounding package that   │
-│                          │ is not declared in your `package.json`.           │
-│ 🕳️ Error Swallowing      │ Agent wraps failing code in `catch {}` or         │
-│                          │ `except: pass` to make integration tests pass.    │
-│ 🚧 Half-baked Stubs      │ Agent writes `// TODO: implement this` in edge    │
-│                          │ cases and claims the feature is complete.         │
-│ 💨 Ghost Reformatting    │ Agent touches 20 untouched files with CRLF/space  │
-│                          │ changes, destroying git blame history.            │
-└──────────────────────────┴───────────────────────────────────────────────────┘
-```
-
-Traditional linters (ESLint, Biome, Prettier) check whole files statically, but they **cannot distinguish between code you authored intentionally and code an AI vandalized in a git diff**.
-
-**`agent-gate` was built to fill this critical gap.**
+1. [Quickstart](#quickstart)
+2. [Example Output](#example-output)
+3. [Rules](#rules)
+4. [Pre-commit Hook](#pre-commit-hook)
+5. [GitHub Actions CI](#github-actions-ci)
+6. [Scoring](#scoring)
+7. [CLI Options](#cli-options)
+8. [Programmatic API](#programmatic-api)
+9. [FAQ](#faq)
+10. [License](#license)
 
 ---
 
-## 🏗️ 3. Architectural Overview & Diff Engine
+### Quickstart
 
-`agent-gate` operates directly on unified Git diff streams, decomposing patches into structured abstract syntax chunks before running rules in parallel:
-
-```text
-  ┌──────────────────┐
-  │   Git Worktree   │ ───► (Staged / Unstaged / Branch Ref)
-  └─────────┬────────┘
-            │
-            ▼
-  ┌────────────────────────────────────────────────────────┐
-  │              Fast Git Diff Parser (parser.ts)          │
-  │  • Unified diff hunk extraction (@@ -x,y +a,b @@)       │
-  │  • Line classification (add / del / context)           │
-  │  • Line-number coordinate mapping                      │
-  └─────────────────────────┬──────────────────────────────┘
-                            │
-            ┌───────────────┴───────────────┐
-            ▼                               ▼
-  ┌───────────────────┐           ┌───────────────────┐
-  │   Addition Rules  │           │  Deletion Rules   │
-  │ • silent-suppress │           │ • deleted-comments│
-  │ • phantom-deps    │           │ • ghost-edits     │
-  │ • empty-catch     │           │                   │
-  │ • placeholder-stub│           │                   │
-  └─────────┬─────────┘           └─────────┬─────────┘
-            │                               │
-            └───────────────┬───────────────┘
-                            ▼
-  ┌────────────────────────────────────────────────────────┐
-  │           Scoring Engine & Terminal Reporter           │
-  │  • Cleanliness Score (0-100)                           │
-  │  • Color-coded terminal UI & GitHub Action annotations │
-  └────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🔍 4. Core Guard Rules Matrix & Detection Logic
-
-```text
-┌──────────────────────────┬──────────┬────────────────────────────────────────┐
-│ Rule Identifier          │ Severity │ Description & Target                   │
-├──────────────────────────┼──────────┼────────────────────────────────────────┤
-│ silent-type-suppression  │ 🚨 Error │ Catches @ts-ignore, @ts-expect-error,  │
-│                          │          │ @ts-nocheck, eslint-disable, # noqa.   │
-│ phantom-dependencies     │ 🚨 Error │ Flags imported packages missing from   │
-│                          │          │ package.json / requirements.txt.       │
-│ deleted-comments         │ ⚠️ Warn  │ Detects stripped documentation, JSDoc, │
-│                          │          │ architecture notes, or inline comments.│
-│ empty-error-handling     │ ⚠️ Warn  │ Catches newly added empty catch {} or  │
-│                          │          │ except: pass blocks.                   │
-│ placeholder-code         │ ℹ️ Info  │ Identifies stubs like "// TODO:        │
-│                          │          │ implement later", "/* placeholder */". │
-│ ghost-edits              │ ℹ️ Info  │ Detects files modified with only       │
-│                          │          │ whitespace or newline formatting.      │
-└──────────────────────────┴──────────┴────────────────────────────────────────┘
-```
-
----
-
-## ⚡ 5. How It Works: Step-by-Step CLI Workflows
-
-### Scenario A: Check Local Changes Before Committing
-Run directly via `npx` (no installation required):
+Run it directly with `npx` in any git repository:
 
 ```bash
+# Check uncommitted changes in your current working tree
 npx agent-gate
-```
 
-### Scenario B: Strict Pre-Commit Verification
-Only evaluate files that are currently staged in git (`git add`):
+# Check only staged files (useful before git commit)
+npx agent-gate --staged
 
-```bash
-npx agent-gate --staged --strict
-```
-
-### Scenario C: Review Pull Request Branch
-Compare feature branch against `origin/main`:
-
-```bash
+# Check a PR branch against main
 npx agent-gate --base origin/main
 ```
 
-### Scenario D: Machine-Readable JSON for Custom CI
+Or install it globally if you prefer:
+
 ```bash
-npx agent-gate --json > agent-gate-report.json
+npm install -g agent-gate
 ```
 
 ---
 
-## 🪝 6. Pre-Commit Hook Integration (Husky & Native)
+### Example Output
 
-Block bad commits before they ever touch your remote repository.
+```text
+  Scanned: 3 files (+38 / -14)
+  Cleanliness Score: 77/100 [NEEDS ATTENTION]
 
-### Option 1: Using Husky (Recommended)
+  Detected Issues (3):
+
+  📄 src/auth/session.ts
+     WARN   deleted-comments:L42
+        Stripped comment or docstring without replacing it.
+        > // Important: session token must be validated against redis whitelist
+        Fix: Restore the comment or verify that the logic was intentionally removed.
+
+  📄 src/db/client.ts
+     ERROR  silent-type-suppression:L19
+        Added silent compiler suppression: "@ts-ignore".
+        > // @ts-ignore
+        Fix: Resolve the type mismatch instead of suppressing the compiler.
+
+  📄 src/utils/string.ts
+     ERROR  phantom-dependencies:L2
+        Imported package "lodash-es" is not listed in package.json.
+        > import { camelCase } from 'lodash-es';
+        Fix: Add lodash-es to package.json dependencies or use a local helper.
+
+  ─────────────────────────────────────────────────────────────────
+  Summary: 2 errors, 1 warning, 0 suggestions
+```
+
+---
+
+### Rules
+
+| Rule | Default Level | What it checks |
+| :--- | :---: | :--- |
+| `silent-type-suppression` | Error | Detects newly added `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `eslint-disable`, `# noqa`, and `# type: ignore`. |
+| `phantom-dependencies` | Error | Checks new `import` and `require` statements against your `package.json` dependencies and built-in Node modules. |
+| `deleted-comments` | Warning | Flags lines where comments or docstrings were removed while surrounding code remained. |
+| `empty-error-handling` | Warning | Flags newly added empty `catch (e) {}`, `catch {}`, or Python `except: pass` blocks. |
+| `placeholder-code` | Info | Warns about leftover comments like `// TODO: implement`, `// placeholder`, or `/* insert logic here */`. |
+| `ghost-edits` | Info | Identifies files in your diff that have no actual code changes other than whitespace or line-ending differences. |
+
+To ignore a specific rule on a run, use `--ignore`:
+```bash
+npx agent-gate --ignore silent-type-suppression,ghost-edits
+```
+
+---
+
+### Pre-commit Hook
+
+To prevent messy AI changes from ever being committed to git:
+
+#### With Husky
 ```bash
 npx husky add .husky/pre-commit "npx agent-gate --staged --strict"
 ```
 
-### Option 2: Native Git Hook (`.git/hooks/pre-commit`)
-Create or edit `.git/hooks/pre-commit`:
+#### With Native Git Hooks (`.git/hooks/pre-commit`)
+Create `.git/hooks/pre-commit` and make it executable:
 ```bash
-#!/usr/bin/env bash
+#!/bin/sh
 npx agent-gate --staged --strict
-if [ $? -ne 0 ]; then
-  echo "❌ agent-gate rejected commit. Please resolve AI slop flagged above."
-  exit 1
-fi
 ```
-Make it executable:
-```bash
-chmod +x .git/hooks/pre-commit
-```
+
+If any errors are found or the cleanliness score drops below 95 in `--strict` mode, the commit will be rejected with an explanation of what needs fixing.
 
 ---
 
-## 🤖 7. Enterprise GitHub Actions CI Pipeline
+### GitHub Actions CI
 
-Add `.github/workflows/agent-gate.yml` to your repository:
+To run `agent-gate` on pull requests, add `.github/workflows/agent-gate.yml`:
 
 ```yaml
-name: Agent Gate CI
+name: agent-gate
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 jobs:
-  slop-watchdog:
-    name: Inspect AI Slop & Code Vandalism
+  check-diff:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Full history needed to compare diff against base
+          fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Run agent-gate Watchdog
+      - name: Run agent-gate
         run: npx --yes agent-gate --base origin/main --ci --strict
 ```
 
----
-
-## 📊 8. Scoring Algorithm: The Cleanliness Score (0-100)
-
-Every scan generates a normalized **Cleanliness Score** from `0` to `100`:
-
-$$\text{Score} = \max\left(0, 100 - (\text{Errors} \times 15) - (\text{Warnings} \times 8) - (\text{Info} \times 3)\right)$$
-
-* 🟢 **90 – 100:** **CLEAN.** Safe to merge. Code changes exhibit high discipline.
-* 🟡 **70 – 89:** **NEEDS ATTENTION.** Minor issues (stripped comments or stubs).
-* 🔴 **0 – 69:** **CRITICAL AI SLOP.** Commits should be blocked. Silent compiler suppressions or phantom imports detected.
+When run with `--ci`, it automatically emits GitHub workflow annotations so warnings and errors show up directly inline on PR diff lines.
 
 ---
 
-## ⚔️ 9. Visual Tier Comparison: Agent-Gate vs. Traditional Linters
+### Scoring
+
+`agent-gate` gives your diff a cleanliness score between 0 and 100:
+
+- Starts at **100**.
+- Each **error** deducts 15 points.
+- Each **warning** deducts 8 points.
+- Each **info** note deducts 3 points.
+
+In regular mode, any score $\ge$ 80 passes. In `--strict` mode, the score must be $\ge$ 95 and there must be 0 errors.
+
+---
+
+### CLI Options
 
 ```text
-┌───────────────────────────────┬────────────┬─────────────┬────────────┐
-│ Capability                    │ agent-gate │ ESLint/TS   │ Git Diff   │
-├───────────────────────────────┼────────────┼─────────────┼────────────┤
-│ Detects stripped comments     │     ✅     │     ❌      │    Manual  │
-│ Flags added @ts-ignore in PR  │     ✅     │     ❌*     │    Manual  │
-│ Checks uncommitted git diffs  │     ✅     │     ❌      │     ✅     │
-│ Flags phantom dependencies    │     ✅     │     ❌      │    Manual  │
-│ Reformat / ghost-edit alerts  │     ✅     │     ❌      │    Manual  │
-│ Cold startup speed            │   < 50ms   │  1,500ms+   │    < 20ms  │
-│ Zero external dependencies    │     ✅     │     ❌      │     ✅     │
-│ Automated Cleanliness Score   │     ✅     │     ❌      │     ❌     │
-└───────────────────────────────┴────────────┴─────────────┴────────────┘
-* Note: ESLint can ban @ts-ignore everywhere, but cannot selectively flag when an AI adds it in a PR diff while legacy code still contains them.
+Usage: agent-gate [options]
+
+Options:
+  --staged              Inspect staged git changes only
+  --base <ref>          Base git ref to compare against (e.g. main, origin/main)
+  --head <ref>          Head git ref to compare (default: HEAD)
+  --strict              Strict mode: requires 0 errors and score >= 95
+  --threshold <num>     Custom score threshold to pass (default: 80)
+  --ci                  Output GitHub Actions annotations (::error, ::warning)
+  --json                Output results as JSON
+  --ignore <rules>      Comma-separated list of rules to skip
+  -h, --help            Show help
+  -v, --version         Show version
 ```
 
 ---
 
-## ⚙️ 10. CLI Configuration & Flags Directory
+### Programmatic API
 
-```text
-USAGE:
-  agent-gate [options]
-
-OPTIONS:
-  --staged              Only inspect git staged changes (great for pre-commit hooks)
-  --base <ref>          Base git ref for comparison (e.g. main, origin/main)
-  --head <ref>          Head git ref for comparison (default: HEAD)
-  --strict              Strict mode: fail on any error/warning or score < 95
-  --threshold <num>     Minimum cleanliness score (0-100) to pass (default: 80)
-  --ci                  Enable GitHub Actions annotations output (::error, ::warning)
-  --json                Output scan results in machine-readable JSON format
-  --ignore <rules>      Comma-separated list of rules to ignore
-  -h, --help            Show CLI help documentation
-  -v, --version         Show agent-gate version
-```
-
----
-
-## 💻 11. Programmatic Node.js API Usage
-
-You can also use `agent-gate` programmatically in your own build scripts:
+You can also use the diff parser and rules engine directly in Node scripts:
 
 ```typescript
-import { parseGitDiff, scanDiff, printReport } from 'agent-gate';
+import { parseGitDiff, scanDiff } from 'agent-gate';
 
-const rawDiff = `...`; // your unified git diff
-const files = parseGitDiff(rawDiff);
-const report = scanDiff(files, { strict: true });
+const diff = `...`; // unified diff string
+const files = parseGitDiff(diff);
+const report = scanDiff(files, { strict: false });
 
-console.log(`Cleanliness Score: ${report.score}/100`);
-if (report.status === 'failed') {
-  console.error('AI slop detected!');
-}
+console.log(`Cleanliness: ${report.score}/100`);
 ```
 
 ---
 
-## ❓ 12. Frequently Asked Questions (Comprehensive Master FAQ)
+### FAQ
 
-#### Q1: Does `agent-gate` send any of my source code to external servers?
-**No, never.** `agent-gate` has **zero telemetry and zero network calls**. It operates 100% locally on your machine using fast deterministic regex AST analysis.
+**Does this send code anywhere?**  
+No. Everything runs locally on your machine using fast string and regex checks. There are no API keys, no telemetry, and no outbound network calls.
 
-#### Q2: What if I genuinely need an `@ts-ignore` for an unfixable vendor type bug?
-You can selectively ignore specific rules for a single run using:
-```bash
-npx agent-gate --ignore silent-type-suppression
-```
+**Why not just use ESLint?**  
+ESLint checks entire files. It doesn't know what you just changed vs what was already there for years. `agent-gate` only inspects the lines in your active git diff, so it won't complain about legacy code you haven't touched.
 
-#### Q3: How is this different from running `git diff` manually?
-Reviewing a 400-line diff manually often leads to missing subtle removed docstrings or a single injected `@ts-ignore`. `agent-gate` automates the audit in under 50ms.
-
-#### Q4: Does it work with Python, Go, Rust, and Java?
-**Yes.** All comment-stripping, empty-error-handling, and ghost-edit rules support Python (`#`, `"""`, `except: pass`), Go, Rust, C++, Java, and Ruby out of the box.
+**What languages are supported?**  
+Rule support:
+- TypeScript, JavaScript, JSX, TSX: all rules (including package.json checks).
+- Python: comments, stubs, empty `except: pass`, and ghost edits.
+- Go, Rust, C++, Java, Ruby, PHP: comment stripping, placeholders, and ghost edits.
 
 ---
 
-## 🤝 13. Contributing & Community Guidelines
+### License
 
-Contributions are warmly welcomed! To set up locally:
-
-```bash
-git clone https://github.com/your-username/agent-gate.git
-cd agent-gate
-npm install
-npm test
-```
-
-Please ensure `npm test` passes before opening a Pull Request.
-
----
-
-## 🔒 14. Platform Governance & Security Disclosures
-
-`agent-gate` is built with **0 external runtime dependencies**. It imports only Node.js core modules (`node:util`, `node:fs`, `node:child_process`). This eliminates software supply-chain injection attack surfaces.
-
----
-
-## 📄 15. License & Author Info
-
-Licensed under the **MIT License**.  
-Built with pride for clean, human-reviewed, high-integrity codebases in the AI era.
+[MIT](LICENSE) © 2026 MinoForge-Official.

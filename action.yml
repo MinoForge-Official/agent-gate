@@ -1,6 +1,6 @@
 name: 'agent-gate'
 description: 'Stop AI agents from silently vandalizing your codebase before PR merge.'
-author: 'MinoForge'
+author: 'MinoForge-Official'
 branding:
   icon: 'shield'
   color: 'blue'
