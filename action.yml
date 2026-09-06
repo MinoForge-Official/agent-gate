@@ -1,4 +1,4 @@
-name: 'agent-gate'
+name: 'Agent Gate - AI Diff Watchdog'
 description: 'Stop AI agents from silently vandalizing your codebase before PR merge.'
 author: 'MinoForge-Official'
 branding:
