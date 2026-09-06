@@ -19,7 +19,7 @@ Built by **MinoForge-Official**
 <br/>
 
 [![npm](https://img.shields.io/npm/v/agent-gate?style=flat-square&color=black)](https://www.npmjs.com/package/agent-gate)
-[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![license](https://img.shields.io/badge/license-Custom-red?style=flat-square)](LICENSE)
 [![dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)](package.json)
 [![node](https://img.shields.io/badge/node-%3E%3D20-green?style=flat-square)](package.json)
 
@@ -249,5 +249,5 @@ Rule support:
 ---
 
 ### License
-
-[MIT](LICENSE) © 2026 MinoForge-Official.
+ 
+[Custom Non-Commercial & Source-Available License](LICENSE) © 2026 MinoForge-Official. All rights reserved. Unauthorized selling, re-uploading, and impersonation are strictly prohibited.

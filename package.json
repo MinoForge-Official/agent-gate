@@ -38,7 +38,7 @@
     "type": "git",
     "url": "https://github.com/MinoForge-Official/agent-gate.git"
   },
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@types/node": "^22.13.0",
     "typescript": "^5.7.3"
