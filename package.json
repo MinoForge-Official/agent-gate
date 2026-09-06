@@ -1,0 +1,46 @@
+{
+  "name": "agent-gate",
+  "version": "1.0.0",
+  "description": "The AI Slop & Diff Watchdog for Git. Catch AI agents silently deleting comments, suppressing types, adding phantom dependencies, and leaving placeholder code.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "agent-gate": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "action.yml"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "test": "node --test dist/tests/**/*.test.js",
+    "pretest": "npm run build"
+  },
+  "keywords": [
+    "ai",
+    "git",
+    "diff",
+    "code-review",
+    "pre-commit",
+    "cursor",
+    "claude-code",
+    "copilot",
+    "linter",
+    "agent-guard",
+    "developer-tools"
+  ],
+  "author": "MinoForge",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MinoForge-Official/agent-gate.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "typescript": "^5.7.3"
+  }
+}

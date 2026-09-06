@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect x="10" y="10" width="380" height="380" rx="36" fill="url(#shieldGrad)" stroke="#334155" stroke-width="3"/>
+  <rect x="25" y="25" width="350" height="350" rx="26" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="8 6"/>
+
+  <!-- Outer Glowing Shield -->
+  <path d="M200,60 L310,110 L310,210 C310,280 200,335 200,335 C200,335 90,280 90,210 L90,110 Z" 
+        fill="#0f172a" stroke="url(#cyanGrad)" stroke-width="6" filter="url(#glow)"/>
+
+  <!-- Inner Protective Crest -->
+  <path d="M200,85 L290,126 L290,205 C290,260 200,308 200,308 C200,308 110,260 110,205 L110,126 Z" 
+        fill="#1e293b" stroke="#38bdf8" stroke-width="2" opacity="0.8"/>
+
+  <!-- Radar Grid Circles -->
+  <circle cx="200" cy="195" r="70" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.4"/>
+  <circle cx="200" cy="195" r="45" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"/>
+  <circle cx="200" cy="195" r="20" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.8"/>
+
+  <!-- Crosshair Coordinates -->
+  <line x1="200" y1="120" x2="200" y2="270" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+  <line x1="125" y1="195" x2="275" y2="195" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+
+  <!-- Central Watchdog Core Emblem -->
+  <polygon points="200,165 228,185 228,215 200,235 172,215 172,185" 
+           fill="url(#accentGrad)" stroke="#ffffff" stroke-width="2" filter="url(#glow)"/>
+  
+  <!-- Checkmark / Shield Pulse -->
+  <path d="M188,200 L197,208 L213,190" fill="none" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Top Badge Label -->
+  <rect x="140" y="38" width="120" height="24" rx="12" fill="#0284c7"/>
+  <text x="200" y="54" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" letter-spacing="1.5" text-anchor="middle">AGENT-GATE</text>
+</svg>

@@ -1,0 +1,42 @@
+name: 'agent-gate'
+description: 'Stop AI agents from silently vandalizing your codebase before PR merge.'
+author: 'MinoForge'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  base:
+    description: 'Base branch or commit reference to compare against (e.g. origin/main)'
+    required: false
+    default: 'origin/main'
+  strict:
+    description: 'Fail if any warnings or score < 95'
+    required: false
+    default: 'false'
+  threshold:
+    description: 'Minimum cleanliness score to pass (0-100)'
+    required: false
+    default: '80'
+  ignore:
+    description: 'Comma-separated rules to ignore'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run agent-gate
+      shell: bash
+      run: |
+        STRICT_FLAG=""
+        if [ "${{ inputs.strict }}" = "true" ]; then
+          STRICT_FLAG="--strict"
+        fi
+        
+        IGNORE_FLAG=""
+        if [ -n "${{ inputs.ignore }}" ]; then
+          IGNORE_FLAG="--ignore ${{ inputs.ignore }}"
+        fi
+
+        npx --yes agent-gate --ci --base "${{ inputs.base }}" --threshold "${{ inputs.threshold }}" $STRICT_FLAG $IGNORE_FLAG
