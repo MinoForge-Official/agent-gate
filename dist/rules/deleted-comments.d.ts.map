@@ -1,1 +1,1 @@
-{"version":3,"file":"deleted-comments.d.ts","sourceRoot":"","sources":["../../src/rules/deleted-comments.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAsC9C,wBAAgB,oBAAoB,CAAC,IAAI,EAAE,QAAQ,GAAG,KAAK,EAAE,CA8C5D"}
+{"version":3,"file":"deleted-comments.d.ts","sourceRoot":"","sources":["../../src/rules/deleted-comments.ts"],"names":[],"mappings":"AAOA,OAAO,EAAE,QAAQ,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAsC9C,wBAAgB,oBAAoB,CAAC,IAAI,EAAE,QAAQ,GAAG,KAAK,EAAE,CA8C5D"}

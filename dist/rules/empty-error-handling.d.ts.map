@@ -1,1 +1,1 @@
-{"version":3,"file":"empty-error-handling.d.ts","sourceRoot":"","sources":["../../src/rules/empty-error-handling.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAE9C,wBAAgB,uBAAuB,CAAC,IAAI,EAAE,QAAQ,GAAG,KAAK,EAAE,CA8D/D"}
+{"version":3,"file":"empty-error-handling.d.ts","sourceRoot":"","sources":["../../src/rules/empty-error-handling.ts"],"names":[],"mappings":"AAOA,OAAO,EAAE,QAAQ,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAE9C,wBAAgB,uBAAuB,CAAC,IAAI,EAAE,QAAQ,GAAG,KAAK,EAAE,CA8D/D"}

@@ -1,4 +1,5 @@
 export * from './types.js';
+export * from './ai.js';
 export * from './git.js';
 export * from './parser.js';
 export * from './scanner.js';

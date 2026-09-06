@@ -1,1 +1,1 @@
-{"version":3,"file":"placeholder-code.d.ts","sourceRoot":"","sources":["../../src/rules/placeholder-code.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAY9C,wBAAgB,oBAAoB,CAAC,IAAI,EAAE,QAAQ,GAAG,KAAK,EAAE,CA2B5D"}
+{"version":3,"file":"placeholder-code.d.ts","sourceRoot":"","sources":["../../src/rules/placeholder-code.ts"],"names":[],"mappings":"AAOA,OAAO,EAAE,QAAQ,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAY9C,wBAAgB,oBAAoB,CAAC,IAAI,EAAE,QAAQ,GAAG,KAAK,EAAE,CA2B5D"}

@@ -1,1 +1,1 @@
-{"version":3,"file":"ghost-edits.d.ts","sourceRoot":"","sources":["../../src/rules/ghost-edits.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAE9C,wBAAgB,eAAe,CAAC,IAAI,EAAE,QAAQ,GAAG,KAAK,EAAE,CAmCvD"}
+{"version":3,"file":"ghost-edits.d.ts","sourceRoot":"","sources":["../../src/rules/ghost-edits.ts"],"names":[],"mappings":"AAOA,OAAO,EAAE,QAAQ,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAE9C,wBAAgB,eAAe,CAAC,IAAI,EAAE,QAAQ,GAAG,KAAK,EAAE,CAmCvD"}
